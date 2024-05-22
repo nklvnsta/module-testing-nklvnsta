@@ -1,5 +1,6 @@
 const { Builder, Browser, By } = require('selenium-webdriver');
-
+const { step } = require('allure-js-commons');
+const allure = require('allure-commandline');
 const assert = require('assert');
 const BrowserType = Browser.CHROME;
 const URL = 'https://market.yandex.ru/';
@@ -21,25 +22,29 @@ class MainPage {
     }
 
     async openURL() {
-        await driver.get(URL);
-        await driver.manage().window().maximize();
-        console.log('✔️  Перейти по ссылке');
-        await driver.sleep(SLEEP_TIME1);
+        await allure.step('Перейти по ссылке', async () => {
+            await driver.get(URL);
+            await driver.manage().window().maximize();
+            console.log('✔️  Перейти по ссылке');
+            await driver.sleep(SLEEP_TIME1);
+        });
     }
 
     async getLaptopsAndСomputers() {
-        await this.driver.findElement(this.locator.hamburger).click();
-        await this.driver.sleep(SLEEP_TIME5);
-        let laptopsAndСomputers = await this.driver.findElement(this.locator.laptopsAndComputers);
-        await this.driver.sleep(SLEEP_TIME1);
-        let element = laptopsAndСomputers;
-        let action = this.driver.actions({ async: true });
-        await action.move({ origin: element }).perform();
-        await this.driver.sleep(SLEEP_TIME1);
-        let tablets_url = await this.driver.findElement(this.locator.tablets_url);
-        await tablets_url.click();
-        console.log('✔️  Открыта страница с планшетами');
-        await this.driver.sleep(SLEEP_TIME3);
+        await allure.step('Открыть категорию "Ноутбуки и компьютеры"', async () => {
+            await this.driver.findElement(this.locator.hamburger).click();
+            await this.driver.sleep(SLEEP_TIME5);
+            let laptopsAndСомputers = await this.driver.findElement(this.locator.laptopsAndComputers);
+            await this.driver.sleep(SLEEP_TIME1);
+            let element = laptopsAndСомputers;
+            let action = this.driver.actions({ async: true });
+            await action.move({ origin: element }).perform();
+            await this.driver.sleep(SLEEP_TIME1);
+            let tablets_url = await this.driver.findElement(this.locator.tablets_url);
+            await tablets_url.click();
+            console.log('✔️  Открыта страница с планшетами');
+            await this.driver.sleep(SLEEP_TIME3);
+        });
     }
 }
 
@@ -63,51 +68,61 @@ class TabletsPage {
     }
 
     async searchSamsung() {
-        await this.driver.findElement(this.locator.getSamsung).click();
-        console.log('✔️  Выбран производитель "Samsung"');
-        await this.driver.sleep(SLEEP_TIME7);
+        await allure.step('Выбрать производителя "Samsung"', async () => {
+            await this.driver.findElement(this.locator.getSamsung).click();
+            console.log('✔️  Выбран производитель "Samsung"');
+            await this.driver.sleep(SLEEP_TIME7);
+        });
     }
 
     async setThePrice() {
-        await this.driver.findElement(this.locator.getBilliger).click();
-        console.log('✔️  Сортировка списка по цене');
-        await this.driver.sleep(SLEEP_TIME1);
+        await allure.step('Сортировка списка по цене', async () => {
+            await this.driver.findElement(this.locator.getBilliger).click();
+            console.log('✔️  Сортировка списка по цене');
+            await this.driver.sleep(SLEEP_TIME1);
+        });
     }
 
     async sortierungList() {
-        await this.driver.sleep(SLEEP_TIME5);
-        let fiveNameTablets = await this.driver.findElements(this.locator.getFiveNameTablets);
-        let fivePriceTablets = await this.driver.findElements(this.locator.getFivePriceTablets);
-        await this.driver.sleep(SLEEP_TIME3);
-        console.log('=====================');
-        console.log('СПИСОК ПЛАНШЕТОВ:');
-        for (let i = 0; i < 5; i++) {
-            this.variables.nameTablets[i] = await fiveNameTablets[i].getText();
-            this.variables.priceTablets[i] = await fivePriceTablets[i].getText();
-            console.log('------------------');
-            console.log('💻 Название: ' + this.variables.nameTablets[i]);
-            console.log('💰 Цена: ' + this.variables.priceTablets[i] + ' рублей');
-        }
-        console.log('=====================');
-        console.log('');
-        console.log('✔️  Вывод информации о планшетах');
-        await this.driver.sleep(SLEEP_TIME3);
+        await allure.step('Вывод информации о планшетах', async () => {
+            await this.driver.sleep(SLEEP_TIME5);
+            let fiveNameTablets = await this.driver.findElements(this.locator.getFiveNameTablets);
+            let fivePriceTablets = await this.driver.findElements(this.locator.getFivePriceTablets);
+            await this.driver.sleep(SLEEP_TIME3);
+            console.log('=====================');
+            console.log('СПИСОК ПЛАНШЕТОВ:');
+            for (let i = 0; i < 5; i++) {
+                this.variables.nameTablets[i] = await fiveNameTablets[i].getText();
+                this.variables.priceTablets[i] = await fivePriceTablets[i].getText();
+                console.log('------------------');
+                console.log('💻 Название: ' + this.variables.nameTablets[i]);
+                console.log('💰 Цена: ' + this.variables.priceTablets[i] + ' рублей');
+            }
+            console.log('=====================');
+            console.log('');
+            console.log('✔️  Вывод информации о планшетах');
+            await this.driver.sleep(SLEEP_TIME3);
+        });
     }
 
     async rememberDevice() {
-        this.variables.secondDevice = this.variables.nameTablets[1];
-        this.variables.secondPrice = this.variables.priceTablets[1];
-        console.log('Название ' + this.variables.secondDevice);
-        console.log('Цена ' + this.variables.secondPrice);
-        console.log('✔️  Информация о втором устройстве:');
+        await allure.step('Запомнить второе устройство', async () => {
+            this.variables.secondDevice = this.variables.nameTablets[1];
+            this.variables.secondPrice = this.variables.priceTablets[1];
+            console.log('Название ' + this.variables.secondDevice);
+            console.log('Цена ' + this.variables.secondPrice);
+            console.log('✔️  Информация о втором устройстве:');
+        });
     }
 
     async deviceSearch() {
-        await this.driver.findElement(this.locator.getInput).sendKeys(this.variables.secondDevice);
-        await this.driver.sleep(SLEEP_TIME1);
-        await this.driver.findElement(this.locator.getButton).click();
-        await this.driver.sleep(SLEEP_TIME7);
-        console.log('✔️  Поиск устройства');
+        await allure.step('Поиск второго устройства', async () => {
+            await this.driver.findElement(this.locator.getInput).sendKeys(this.variables.secondDevice);
+            await this.driver.sleep(SLEEP_TIME1);
+            await this.driver.findElement(this.locator.getButton).click();
+            await this.driver.sleep(SLEEP_TIME7);
+            console.log('✔️  Поиск устройства');
+        });
     }
 }
 
@@ -119,7 +134,7 @@ describe('Вариант №1', function () {
             await mainPage.openURL();
             await mainPage.getLaptopsAndСomputers();
         } catch (err) {
-            driver.takeScreenshot().then(function (image) {
+            await driver.takeScreenshot().then(function (image) {
                 require('fs').writeFileSync('screenshot_error.png', image, 'base64');
             });
             console.error('Не работает: %s', err);
@@ -139,13 +154,13 @@ describe('Вариант №1', function () {
             let thisFirstDeviceText = await thisFirstDevice.getText();
             assert.strictEqual(thisFirstDeviceText, tabletsPage.variables.secondDevice, 'Названия не совпадают');
         } catch (err) {
-            driver.takeScreenshot().then(function (image) {
+            await driver.takeScreenshot().then(function (image) {
                 require('fs').writeFileSync('screenshot_error.png', image, 'base64');
             });
             console.error('Не работает: %s', err);
         }
-    })
+    });
     after(async function () {
         await driver.quit();
     });
-})
+});
