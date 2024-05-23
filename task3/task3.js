@@ -1,7 +1,7 @@
 const { Builder, Browser, By } = require('selenium-webdriver');
 const { step } = require('allure-js-commons');
-const allure = require('allure-commandline');
 const assert = require('assert');
+const { allure } = require("allure-mocha/dist/MochaAllureReporter");
 const BrowserType = Browser.CHROME;
 const URL = 'https://market.yandex.ru/';
 const SLEEP_TIME1 = 1000;
